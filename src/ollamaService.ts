@@ -112,20 +112,24 @@ export class OllamaService {
                     let buffer = '';
 
                     response.data.on('data', (chunk: Buffer) => {
-                        buffer += chunk.toString();
+                        const chunkStr = chunk.toString();
+                        buffer += chunkStr;
                         
-                        // Process complete lines
-                        let lines = buffer.split('\\n');
+                        // Process complete lines (fix: use '\n' not '\\n')
+                        let lines = buffer.split('\n');
                         buffer = lines.pop() || ''; // Keep incomplete line in buffer
 
                         for (const line of lines) {
-                            if (line.trim() === '') continue;
+                            const trimmedLine = line.trim();
+                            if (trimmedLine === '') continue;
                             
-                            let jsonStr = line.trim();
+                            // Handle Server-Sent Events format
+                            let jsonStr = trimmedLine;
                             if (jsonStr.startsWith('data: ')) {
                                 jsonStr = jsonStr.substring(6).trim();
                             }
                             
+                            // Check for end marker
                             if (jsonStr === '[DONE]') {
                                 resolve(fullResponse);
                                 return;
@@ -133,13 +137,34 @@ export class OllamaService {
 
                             try {
                                 const data = JSON.parse(jsonStr);
-                                if (data.choices && data.choices[0]?.delta?.content) {
-                                    const content = data.choices[0].delta.content;
-                                    fullResponse += content;
-                                    onChunk(content);
+                                // Handle both streaming chunk format and regular format
+                                if (data.choices && data.choices[0]) {
+                                    const choice = data.choices[0];
+                                    let content = '';
+                                    
+                                    // Check for streaming format (delta.content)
+                                    if (choice.delta && choice.delta.content) {
+                                        content = choice.delta.content;
+                                    }
+                                    // Check for regular format (message.content)
+                                    else if (choice.message && choice.message.content) {
+                                        content = choice.message.content;
+                                    }
+                                    
+                                    if (content) {
+                                        fullResponse += content;
+                                        onChunk(content);
+                                    }
+                                    
+                                    // Check if this is the final chunk
+                                    if (choice.finish_reason === 'stop') {
+                                        resolve(fullResponse);
+                                        return;
+                                    }
                                 }
                             } catch (e) {
-                                // Ignore malformed JSON chunks
+                                // Log parsing errors for debugging
+                                console.warn('Failed to parse streaming chunk:', jsonStr, e);
                             }
                         }
                     });
@@ -149,7 +174,18 @@ export class OllamaService {
                     });
 
                     response.data.on('error', (error: Error) => {
+                        console.error('Streaming error:', error);
                         reject(error);
+                    });
+                    
+                    // Add timeout handling
+                    const timeout = setTimeout(() => {
+                        reject(new Error('Streaming response timeout'));
+                    }, 120000); // 2 minutes
+                    
+                    response.data.on('end', () => {
+                        clearTimeout(timeout);
+                        resolve(fullResponse);
                     });
                 });
             } else {

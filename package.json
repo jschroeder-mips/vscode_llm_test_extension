@@ -46,12 +46,14 @@
         {
           "id": "ollamaChat.chatView",
           "name": "Chat with AI",
-          "when": "true"
+          "when": "true",
+          "icon": "$(comment-discussion)"
         },
         {
           "id": "ollamaChat.modelsView",
           "name": "Available Models",
-          "when": "true"
+          "when": "true",
+          "icon": "$(list-unordered)"
         }
       ]
     },

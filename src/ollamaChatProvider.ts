@@ -115,6 +115,9 @@ export class OllamaChatProvider {
             // Add current user message
             messages.push({ role: 'user', content: userMessage });
 
+            console.log('Sending message to model:', model);
+            console.log('Messages:', messages);
+
             // Send user message to webview immediately
             this.panel?.webview.postMessage({
                 command: 'addMessage',
@@ -127,13 +130,19 @@ export class OllamaChatProvider {
             });
 
             let assistantResponse = '';
+            let chunkCount = 0;
+            
             await this.ollamaService.chat(model, messages, (chunk: string) => {
+                chunkCount++;
+                console.log(`Received chunk ${chunkCount}:`, chunk);
                 assistantResponse += chunk;
                 this.panel?.webview.postMessage({
                     command: 'streamChunk',
                     chunk: chunk
                 });
             });
+
+            console.log('Chat completed. Total response:', assistantResponse);
 
             // Finish streaming
             this.panel?.webview.postMessage({
@@ -142,6 +151,7 @@ export class OllamaChatProvider {
             });
 
         } catch (error) {
+            console.error('Error in handleSendMessage:', error);
             this.panel?.webview.postMessage({
                 command: 'showError',
                 message: error instanceof Error ? error.message : 'An error occurred while chatting'
@@ -376,6 +386,9 @@ export class OllamaChatProvider {
         refreshModels.addEventListener('click', () => {
             vscode.postMessage({ command: 'refreshModels' });
         });
+        
+        // Update UI when model selection changes
+        modelSelect.addEventListener('change', updateUI);
         
         userInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {

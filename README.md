@@ -71,7 +71,12 @@ A VS Code extension that enables you to chat with local Ollama models directly w
    code .
    
    # Launch Extension Development Host
-   # Press F5 or use: Debug > Start Debugging
+   # Method 1: Direct command (most reliable)
+   code --extensionDevelopmentPath=$(pwd)
+   
+   # Method 2: VS Code Debug (F5)
+   # Open src/extension.ts, then press F5
+   # Or use: Debug > Start Debugging
    ```
 
 3. **Use the extension in the test window**:
@@ -200,11 +205,27 @@ The extension adds a **robot icon (🤖)** to VS Code's Activity Bar (left sideb
 
 3. **Extension won't load**:
    - Ensure you compiled the TypeScript: `npm run compile`
+   - **F5 shows "JSON debugging" error**: Use direct command instead:
+     ```bash
+     code --extensionDevelopmentPath=$(pwd)
+     ```
    - Check the VS Code Developer Tools:
      - **Mac**: `Cmd+Shift+I` or Help > Toggle Developer Tools
      - **Linux**: `Ctrl+Shift+I` or Help > Toggle Developer Tools
 
-4. **Model responses are slow**:
+4. **Send button stays disabled**:
+   - Make sure you select a model from the dropdown (not just click)
+   - Try refreshing models if dropdown shows "Loading models..."
+   - Reload the extension: `Cmd+R` in Extension Development Host
+
+5. **Messages send but no response**:
+   - **Debug Console**: Press `Cmd+Shift+I` in Extension Development Host → Console tab
+   - **Look for errors**: Check for red error messages in console
+   - **Test API directly**: Run `node test_ollama_api.js` from project directory
+   - **Reload extension**: `Cmd+R` in Extension Development Host window
+   - **Check logs**: Should see "Sending message to model" and "Received chunk" messages
+
+6. **Model responses are slow**:
    - Smaller models respond faster (gemma3n:e4b vs mistral-small3.2:24b)
    - **Mac**: Check Activity Monitor for CPU/Memory usage
    - **Linux**: Use `htop` or `top` to monitor system resources
