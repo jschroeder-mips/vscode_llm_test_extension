@@ -2,6 +2,10 @@
 
 A VS Code extension that enables you to chat with local Ollama models directly within your editor. Features real-time streaming responses, model selection, and customizable system prompts.
 
+![screenshot_01](screenshot_01.png)
+
+![screenshot_02](screenshot_02.png)
+
 ## 🎯 Features
 
 - **🤖 Local LLM Chat**: Communicate with Ollama models without leaving VS Code
