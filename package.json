@@ -60,8 +60,8 @@
     "keybindings": [
       {
         "command": "ollamaChat.openChat",
-        "key": "ctrl+shift+o",
-        "mac": "cmd+shift+o",
+        "key": "ctrl+shift+l",
+        "mac": "cmd+shift+l",
         "when": "editorTextFocus"
       }
     ],

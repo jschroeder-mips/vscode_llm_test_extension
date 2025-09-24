@@ -55,7 +55,7 @@ code .
 - Press Enter
 
 **Option C: Keyboard Shortcut**
-- Press `Cmd+Shift+O`
+- Press `Cmd+Shift+L`
 
 ## 🔧 Common Issues & Solutions
 

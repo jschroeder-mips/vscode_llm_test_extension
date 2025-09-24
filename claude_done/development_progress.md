@@ -50,7 +50,7 @@ Successfully created a fully functional VS Code extension that allows users to c
 
 ### 5. User Experience Features ✅
 - **Command Palette Integration**: "Open Ollama Chat" command
-- **Keyboard Shortcuts**: `Ctrl+Shift+O` (Windows/Linux) / `Cmd+Shift+O` (Mac)
+- **Keyboard Shortcuts**: `Ctrl+Shift+L` (Windows/Linux) / `Cmd+Shift+L` (Mac)
 - **Model Refresh**: Manual refresh capability for newly installed models
 - **Persistent Webview**: Chat state maintained when panel is hidden
 - **Theme Integration**: Follows VS Code's active color theme

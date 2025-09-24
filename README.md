@@ -15,8 +15,8 @@ A VS Code extension that enables you to chat with local Ollama models directly w
 - **🎨 Theme Integration**: Matches your VS Code theme automatically
 - **🔗 Sidebar Integration**: Click the robot icon (🤖) in the Activity Bar for easy access
 - **⌨️ Keyboard Shortcuts**: 
-  - **Mac**: `Cmd+Shift+O` to open chat, `Cmd+Enter` to send messages
-  - **Linux**: `Ctrl+Shift+O` to open chat, `Ctrl+Enter` to send messages
+  - **Mac**: `Cmd+Shift+L` to open chat, `Cmd+Enter` to send messages
+  - **Linux**: `Ctrl+Shift+L` to open chat, `Ctrl+Enter` to send messages
 
 ## 🚀 Local Installation & Testing
 
@@ -92,8 +92,8 @@ A VS Code extension that enables you to chat with local Ollama models directly w
    - Click any model name to select it and open chat
    
    **⌨️ Keyboard Method**:
-   - **Mac**: Use `Cmd+Shift+P` → "Open Ollama Chat" or `Cmd+Shift+O`
-   - **Linux**: Use `Ctrl+Shift+P` → "Open Ollama Chat" or `Ctrl+Shift+O`
+   - **Mac**: Use `Cmd+Shift+P` → "Open Ollama Chat" or `Cmd+Shift+L`
+   - **Linux**: Use `Ctrl+Shift+P` → "Open Ollama Chat" or `Ctrl+Shift+L`
 
 ### Verification Steps
 
@@ -136,7 +136,7 @@ npm run test
 | Action | Mac | Linux |
 |--------|-----|-------|
 | Open Command Palette | `Cmd+Shift+P` | `Ctrl+Shift+P` |
-| Open Ollama Chat | `Cmd+Shift+O` | `Ctrl+Shift+O` |
+| Open Ollama Chat | `Cmd+Shift+L` | `Ctrl+Shift+L` |
 | Send Message in Chat | `Cmd+Enter` | `Ctrl+Enter` |
 
 ### Development & Debugging

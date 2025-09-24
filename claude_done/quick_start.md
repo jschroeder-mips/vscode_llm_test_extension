@@ -29,7 +29,7 @@ npm run compile
 ```
 
 ### 3. Usage
-1. **Open Chat**: Use `Ctrl+Shift+O` (or `Cmd+Shift+O` on Mac)
+1. **Open Chat**: Use `Ctrl+Shift+L` (or `Cmd+Shift+L` on Mac)
 2. **Select Model**: Choose from dropdown of available models
 3. **Set System Prompt** (Optional): Configure AI behavior
 4. **Chat**: Type messages and get AI responses

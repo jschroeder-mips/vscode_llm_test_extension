@@ -7,7 +7,7 @@ Created a complete VS Code extension for chatting with local Ollama models using
 
 ### 1. Extension Manifest (`package.json`)
 - **Commands**: `ollamaChat.openChat`, `ollamaChat.refreshModels`
-- **Keybindings**: `Ctrl+Shift+O` / `Cmd+Shift+O`
+- **Keybindings**: `Ctrl+Shift+L` / `Cmd+Shift+L`
 - **Dependencies**: axios for HTTP, VS Code types for development
 - **Activation**: Automatic when commands are used
 
