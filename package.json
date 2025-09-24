@@ -1,0 +1,112 @@
+{
+  "name": "ollama-chat-extension",
+  "displayName": "Ollama Chat Extension",
+  "description": "Chat with local Ollama models directly in VS Code",
+  "version": "0.1.0",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ollamaChat.openChat",
+        "title": "Open Ollama Chat",
+        "category": "Ollama",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "ollamaChat.refreshModels",
+        "title": "Refresh Models",
+        "category": "Ollama",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "ollamaChat.selectModel",
+        "title": "Select Model and Open Chat",
+        "category": "Ollama"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ollama-chat",
+          "title": "Ollama Chat",
+          "icon": "$(robot)"
+        }
+      ]
+    },
+    "views": {
+      "ollama-chat": [
+        {
+          "id": "ollamaChat.chatView",
+          "name": "Chat with AI",
+          "when": "true"
+        },
+        {
+          "id": "ollamaChat.modelsView",
+          "name": "Available Models",
+          "when": "true"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "ollamaChat.openChat",
+        "key": "ctrl+shift+o",
+        "mac": "cmd+shift+o",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "ollamaChat.openChat",
+          "when": "true"
+        },
+        {
+          "command": "ollamaChat.refreshModels",
+          "when": "true"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "ollamaChat.openChat",
+          "when": "view == ollamaChat.chatView",
+          "group": "navigation"
+        },
+        {
+          "command": "ollamaChat.refreshModels",
+          "when": "view == ollamaChat.modelsView",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "eslint": "^8.47.0",
+    "typescript": "^5.1.6",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.4"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
