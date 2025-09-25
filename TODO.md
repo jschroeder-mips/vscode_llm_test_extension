@@ -27,6 +27,16 @@
 - ✅ **Model Management** - Refresh models, clear conversations
 - ✅ **User Experience** - Loading states, disabled states, proper validation
 
+### VS Code Language Model API Integration (NEW!)
+- ✅ **Dual Provider Architecture** - Support for both Ollama (local) and VS Code Language Models (cloud)
+- ✅ **Abstract Provider Pattern** - Clean architecture supporting multiple language model sources
+- ✅ **VS Code LM Service** - Integration with GitHub Copilot models (GPT-4o, Claude 3.5, o1, etc.)
+- ✅ **Provider Switching** - Easy switching between Ollama and VS Code Language Models
+- ✅ **Smart Provider Detection** - Automatic detection of available providers
+- ✅ **Unified Error Handling** - Consistent error handling for both provider types
+- ✅ **Command Integration** - New commands for switching providers and checking status
+- ✅ **Comprehensive Documentation** - Complete guide for both provider types
+
 ### Technical Implementation
 - ✅ **TypeScript** - Full type safety and modern async/await patterns
 - ✅ **Webview Communication** - Bidirectional messaging between extension and UI

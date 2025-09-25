@@ -1,6 +1,15 @@
-# Ollama Chat VS Code Extension
+# Language Model Chat VS Code Extension
 
-A VS Code extension that enables you to chat with local Ollama models directly within your editor. Features real-time streaming responses, model selection, and customizable system prompts.
+A VS Code extension that provides a **unified chat interface** for both **local Ollama models** and **VS Code Language Models** (GitHub Copilot). Switch seamlessly between privacy-focused local models and powerful cloud models based on your needs.
+
+## ✨ **What Makes This Special**
+
+- **🔄 Dual Provider Architecture**: Seamlessly switch between local and cloud models
+- **🎯 Smart Provider Detection**: Automatically detects available providers  
+- **📱 Dynamic UI Updates**: Interface adapts based on selected provider
+- **🔒 Privacy Choice**: Keep sensitive data local with Ollama or use advanced cloud models
+- **⚡ Real-time Streaming**: Live responses from both provider types
+- **🎨 Native Integration**: Follows VS Code design patterns and themes
 
 ![screenshot_01](screenshot_01.png)
 
@@ -8,19 +17,47 @@ A VS Code extension that enables you to chat with local Ollama models directly w
 
 ## 🎯 Features
 
-- **🤖 Local LLM Chat**: Communicate with Ollama models without leaving VS Code
-- **📋 Model Selection**: Dropdown menu with all your installed Ollama models
-- **💬 Real-time Streaming**: See responses as they're generated
+- **🤖 Dual Provider Support**: Chat with both local Ollama models and cloud-based VS Code Language Models
+- **📋 Smart Model Selection**: Automatic detection of available models from both providers
+- **💬 Real-time Streaming**: See responses as they're generated from any provider
+- **⚡ Provider Switching**: Easily switch between Ollama (local) and VS Code LM (cloud) providers
 - **⚙️ System Prompts**: Customize AI behavior for different tasks
-- **🎨 Theme Integration**: Matches your VS Code theme automatically
+- **🎨 Theme Integration**: Matches your VS Code theme automatically  
 - **🔗 Sidebar Integration**: Click the robot icon (🤖) in the Activity Bar for easy access
 - **⌨️ Keyboard Shortcuts**: 
   - **Mac**: `Cmd+Shift+L` to open chat, `Cmd+Enter` to send messages
   - **Linux**: `Ctrl+Shift+L` to open chat, `Ctrl+Enter` to send messages
 
+## 🌟 Language Model Providers
+
+### 🏠 **Ollama (Local Models)**
+- ✅ **Complete privacy** - All data stays on your machine
+- ✅ **Works offline** - No internet connection required
+- ✅ **No ongoing costs** - Free to use once installed
+- ✅ **Full control** - Choose any model from Ollama library
+- ⚙️ **Setup required** - Must install and run Ollama locally
+
+### ☁️ **VS Code Language Models (GitHub Copilot)**  
+- ✅ **Advanced models** - GPT-4o, Claude 3.5 Sonnet, o1, etc.
+- ✅ **No local setup** - Ready to use immediately
+- ✅ **Latest AI** - Always updated to newest model versions
+- 💰 **Requires subscription** - GitHub Copilot subscription needed
+- 🌐 **Internet required** - Cloud-based models
+
 ## 🚀 Local Installation & Testing
 
-### Prerequisites
+## 🚀 Getting Started
+
+The extension supports two language model providers. You can set up one or both:
+
+### Option 1: VS Code Language Models (Easiest)
+
+1. **Install GitHub Copilot extension** (if not already installed)
+2. **Subscribe to GitHub Copilot** at https://github.com/features/copilot
+3. **Install this extension** and it will automatically detect Copilot models
+4. **Grant permissions** when prompted to use language models
+
+### Option 2: Ollama (Privacy-focused)
 
 1. **Install Ollama** (if not already installed):
    
@@ -49,9 +86,9 @@ A VS Code extension that enables you to chat with local Ollama models directly w
 3. **Install at least one model**:
    ```bash
    # Example models (choose based on your hardware)
-   ollama pull gemma3n:e4b          # Smaller model (~2.7GB)
-   ollama pull mistral-small3.2:24b # Larger model (~13GB)
-   ollama pull llama3.1:8b          # Popular model (~4.7GB)
+   ollama pull llama3.2:3b          # Smaller model (~2GB) - Good for most tasks
+   ollama pull codellama:7b         # Code-focused model (~3.8GB)
+   ollama pull llama3.1:8b          # Popular general model (~4.7GB)
    ```
 
 ### Extension Installation
@@ -84,12 +121,52 @@ A VS Code extension that enables you to chat with local Ollama models directly w
    ```
 
 3. **Use the extension in the test window**:
+
+## 🎮 Using the Extension
+
+## 🎮 Using the Extension
+
+### 🎯 **First Time Setup**
+1. **Check what's available**:
+   ```
+   Cmd+Shift+P → "Show Provider Status"
+   ```
+   See which providers are detected and available
+
+2. **Switch providers** (if you have both):
+   ```
+   Cmd+Shift+P → "Switch Language Model Provider"
+   ```
+   Choose between:
+   - **Ollama (Local)** - Privacy-focused, works offline
+   - **VS Code Language Models** - Advanced cloud models
+
+### 💬 **Chat Interface**
    
-   **🖱️ Sidebar Method (Recommended)**:
-   - Look for the robot icon (🤖) in the Activity Bar (left sidebar)
-   - Click it to open the Ollama Chat sidebar
-   - Click "Open Chat" to start chatting
-   - Click any model name to select it and open chat
+**🖱️ Sidebar Method (Recommended)**:
+- Click the robot icon (🤖) in Activity Bar (left sidebar)  
+- Interface shows current provider at the top
+- Select a model from the dropdown
+- Start chatting!
+
+**⌨️ Keyboard Method**:
+- Press `Cmd+Shift+L` (Mac) or `Ctrl+Shift+L` (Linux)
+- Opens chat interface directly
+
+### 🔄 **Provider Switching**
+The interface **dynamically updates** when you switch providers:
+- **Model dropdown** refreshes with provider-specific models
+- **Provider badge** shows current selection at top of chat
+- **Error messages** are tailored to the active provider
+- **Streaming** works consistently across both providers
+
+### Chat Interface
+   
+**🖱️ Sidebar Method (Recommended)**:
+- Look for the robot icon (🤖) in the Activity Bar (left sidebar)
+- Click it to open the chat sidebar
+- Click "Open Chat" to start chatting
+- Click any model name to select it and open chat
    
    **⌨️ Keyboard Method**:
    - **Mac**: Use `Cmd+Shift+P` → "Open Ollama Chat" or `Cmd+Shift+L`

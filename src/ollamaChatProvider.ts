@@ -1,12 +1,15 @@
 import * as vscode from 'vscode';
 import { OllamaService, ChatMessage, OllamaModel } from './ollamaService';
+import { UnifiedLanguageModelService } from './unifiedLanguageModelService';
+import { LanguageModel } from './languageModelProvider';
 
 export class OllamaChatProvider {
     private panel: vscode.WebviewPanel | undefined = undefined;
 
     constructor(
         private readonly extensionUri: vscode.Uri,
-        private readonly ollamaService: OllamaService
+        private readonly ollamaService: OllamaService,
+        private readonly unifiedService?: UnifiedLanguageModelService
     ) {}
 
     public async showChatView() {
@@ -49,13 +52,33 @@ export class OllamaChatProvider {
 
     private async loadModels() {
         try {
-            const models = await this.ollamaService.getModels();
+            let models: any[] = [];
+            let currentProvider = 'ollama';
+            
+            if (this.unifiedService) {
+                // Use unified service to get models from current provider
+                const unifiedModels = await this.unifiedService.getAvailableModels();
+                currentProvider = this.unifiedService.getCurrentProvider();
+                
+                models = unifiedModels.map(model => ({
+                    name: model.name,
+                    size: model.provider === 'ollama' ? '' : '(Cloud)', // VS Code LM models don't have size info
+                    provider: model.provider
+                }));
+            } else {
+                // Fallback to old ollama service
+                const ollamaModels = await this.ollamaService.getModels();
+                models = ollamaModels.map(model => ({
+                    name: model.name,
+                    size: this.formatBytes(model.size),
+                    provider: 'ollama'
+                }));
+            }
+
             this.panel?.webview.postMessage({
                 command: 'updateModels',
-                models: models.map(model => ({
-                    name: model.name,
-                    size: this.formatBytes(model.size)
-                }))
+                models: models,
+                currentProvider: currentProvider
             });
         } catch (error) {
             this.panel?.webview.postMessage({
@@ -71,6 +94,10 @@ export class OllamaChatProvider {
             command: 'selectModel',
             modelName: modelName
         });
+    }
+
+    public async refreshModelsForProvider() {
+        await this.loadModels();
     }
 
     private async handleWebviewMessage(message: any) {
@@ -132,7 +159,7 @@ export class OllamaChatProvider {
             let assistantResponse = '';
             let chunkCount = 0;
             
-            await this.ollamaService.chat(model, messages, (chunk: string) => {
+            const streamCallback = (chunk: string) => {
                 chunkCount++;
                 console.log(`Received chunk ${chunkCount}:`, chunk);
                 assistantResponse += chunk;
@@ -140,7 +167,16 @@ export class OllamaChatProvider {
                     command: 'streamChunk',
                     chunk: chunk
                 });
-            });
+            };
+
+            if (this.unifiedService) {
+                // Use unified service which supports both Ollama and VS Code LM
+                const cancellationTokenSource = new vscode.CancellationTokenSource();
+                await this.unifiedService.chat(messages, model, streamCallback, cancellationTokenSource.token);
+            } else {
+                // Fallback to old ollama service
+                await this.ollamaService.chat(model, messages, streamCallback);
+            }
 
             console.log('Chat completed. Total response:', assistantResponse);
 
@@ -331,11 +367,23 @@ export class OllamaChatProvider {
             color: var(--vscode-descriptionForeground);
             margin-left: 10px;
         }
+        
+        .provider-info {
+            font-size: 0.85em;
+            color: var(--vscode-descriptionForeground);
+            background-color: var(--vscode-badge-background);
+            color: var(--vscode-badge-foreground);
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h2>Ollama Chat</h2>
+        <h2>Language Model Chat</h2>
+        <div id="providerInfo" class="provider-info">Provider: Loading...</div>
         
         <div class="model-selector">
             <label for="modelSelect">Select Model:</label>
@@ -494,18 +542,29 @@ export class OllamaChatProvider {
             updateUI();
         }
         
-        function updateModels(models) {
+        function updateModels(models, currentProvider) {
             modelSelect.innerHTML = '';
+            
+            // Update provider info
+            const providerInfo = document.getElementById('providerInfo');
+            if (providerInfo) {
+                const providerName = currentProvider === 'ollama' ? 'Ollama (Local)' : 'VS Code Language Models (Cloud)';
+                providerInfo.textContent = \`Provider: \${providerName}\`;
+            }
             
             if (models.length === 0) {
                 modelSelect.innerHTML = '<option value="">No models available</option>';
-                showError('No Ollama models found. Please install models using: ollama pull <model-name>');
+                if (currentProvider === 'ollama') {
+                    showError('No Ollama models found. Please install models using: ollama pull <model-name>');
+                } else {
+                    showError('No VS Code Language Models available. Please ensure GitHub Copilot is enabled and you have given consent.');
+                }
             } else {
                 modelSelect.innerHTML = '<option value="">Select a model...</option>';
                 models.forEach(model => {
                     const option = document.createElement('option');
                     option.value = model.name;
-                    option.textContent = \`\${model.name} (\${model.size})\`;
+                    option.textContent = \`\${model.name} \${model.size ? '(' + model.size + ')' : ''}\`;
                     modelSelect.appendChild(option);
                 });
             }
@@ -553,7 +612,7 @@ export class OllamaChatProvider {
             
             switch (message.command) {
                 case 'updateModels':
-                    updateModels(message.models);
+                    updateModels(message.models, message.currentProvider);
                     updateUI();
                     break;
                 case 'selectModel':

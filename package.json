@@ -30,7 +30,20 @@
         "command": "ollamaChat.selectModel",
         "title": "Select Model and Open Chat",
         "category": "Ollama"
+      },
+      {
+        "command": "ollamaChat.switchProvider",
+        "title": "Switch Language Model Provider",
+        "category": "Ollama",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "ollamaChat.providerStatus",
+        "title": "Show Provider Status",
+        "category": "Ollama",
+        "icon": "$(info)"
       }
+
     ],
     "viewsContainers": {
       "activitybar": [
