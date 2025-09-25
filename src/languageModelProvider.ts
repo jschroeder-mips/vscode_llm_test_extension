@@ -17,6 +17,13 @@ export interface ChatMessage {
     content: string;
 }
 
+export interface ChatOptions {
+    systemPrompt?: string;
+    temperature?: number;
+    maxTokens?: number;
+    [key: string]: any;
+}
+
 export abstract class LanguageModelProvider {
     abstract getAvailableModels(): Promise<LanguageModel[]>;
     abstract isAvailable(): Promise<boolean>;
@@ -24,7 +31,8 @@ export abstract class LanguageModelProvider {
         messages: ChatMessage[], 
         model: string,
         onStream: StreamingCallback,
-        cancellationToken: vscode.CancellationToken
+        cancellationToken: vscode.CancellationToken,
+        options?: ChatOptions
     ): Promise<void>;
     
     abstract getProviderName(): string;

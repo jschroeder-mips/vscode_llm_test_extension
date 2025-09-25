@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { LanguageModelProvider, LanguageModel, ChatMessage, StreamingCallback } from './languageModelProvider';
+import { LanguageModelProvider, LanguageModel, ChatMessage, StreamingCallback, ChatOptions } from './languageModelProvider';
 import { OllamaLanguageModelProvider } from './ollamaLanguageModelProvider';
 import { VSCodeLanguageModelProvider } from './vscodeLanguageModelProvider';
 
@@ -76,9 +76,10 @@ export class UnifiedLanguageModelService {
         messages: ChatMessage[], 
         model: string,
         onStream: StreamingCallback,
-        cancellationToken: vscode.CancellationToken
+        cancellationToken: vscode.CancellationToken,
+        options?: ChatOptions
     ): Promise<void> {
-        return await this.getActiveProvider().chat(messages, model, onStream, cancellationToken);
+        return await this.getActiveProvider().chat(messages, model, onStream, cancellationToken, options);
     }
 
     // Legacy methods for backward compatibility with existing code

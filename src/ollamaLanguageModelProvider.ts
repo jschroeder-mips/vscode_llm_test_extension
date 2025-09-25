@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import * as vscode from 'vscode';
-import { LanguageModelProvider, LanguageModel, ChatMessage, StreamingCallback } from './languageModelProvider';
+import { LanguageModelProvider, LanguageModel, ChatMessage, StreamingCallback, ChatOptions } from './languageModelProvider';
 
 export interface OllamaModel {
     name: string;
@@ -69,7 +69,8 @@ export class OllamaLanguageModelProvider extends LanguageModelProvider {
         messages: ChatMessage[], 
         model: string,
         onStream: StreamingCallback,
-        cancellationToken: vscode.CancellationToken
+        cancellationToken: vscode.CancellationToken,
+        options?: ChatOptions
     ): Promise<void> {
         try {
             console.log('OllamaLanguageModelProvider: Starting chat with model:', model);

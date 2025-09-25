@@ -1,6 +1,9 @@
 import * as vscode from 'vscode';
 import { LanguageModelProvider, LanguageModel, ChatMessage, StreamingCallback } from './languageModelProvider';
 
+// Default system prompt for VS Code Language Model interactions
+const DEFAULT_SYSTEM_PROMPT = `You are a helpful AI assistant integrated into Visual Studio Code. You provide accurate, concise, and practical assistance with coding, development tasks, and technical questions. Focus on being clear and actionable in your responses.`;
+
 export class VSCodeLanguageModelProvider extends LanguageModelProvider {
     private static readonly SUPPORTED_MODELS = [
         { name: 'GPT-4o', id: 'gpt-4o', family: 'gpt-4o', vendor: 'copilot' },
@@ -62,7 +65,8 @@ export class VSCodeLanguageModelProvider extends LanguageModelProvider {
         messages: ChatMessage[], 
         model: string,
         onStream: StreamingCallback,
-        cancellationToken: vscode.CancellationToken
+        cancellationToken: vscode.CancellationToken,
+        options?: { systemPrompt?: string; temperature?: number; maxTokens?: number; }
     ): Promise<void> {
         try {
             // Find the model info
@@ -87,13 +91,49 @@ export class VSCodeLanguageModelProvider extends LanguageModelProvider {
             const selectedModel = models[0];
 
             // Convert messages to VS Code format
-            const vscodeMessages = messages.map(msg => {
-                if (msg.role === 'user' || msg.role === 'system') {
-                    return vscode.LanguageModelChatMessage.User(msg.content);
+            // Note: VS Code LM API doesn't support system messages, so we'll prepend 
+            // system instructions to the first user message as a workaround
+            const vscodeMessages: vscode.LanguageModelChatMessage[] = [];
+            let systemPrompt = '';
+            
+            // Combine system prompts from multiple sources:
+            // 1. System messages in the conversation
+            const systemMessages = messages.filter(msg => msg.role === 'system');
+            if (systemMessages.length > 0) {
+                systemPrompt += systemMessages.map(msg => msg.content).join('\n\n');
+            }
+            
+            // 2. System prompt from options (takes priority/gets added)
+            if (options?.systemPrompt) {
+                systemPrompt = systemPrompt 
+                    ? options.systemPrompt + '\n\n' + systemPrompt 
+                    : options.systemPrompt;
+            }
+            
+            // 3. Use default system prompt if no other system prompt is provided
+            if (!systemPrompt) {
+                systemPrompt = DEFAULT_SYSTEM_PROMPT;
+            }
+            
+            if (systemPrompt) {
+                systemPrompt += '\n\n';
+            }
+            
+            // Process non-system messages
+            const nonSystemMessages = messages.filter(msg => msg.role !== 'system');
+            for (let i = 0; i < nonSystemMessages.length; i++) {
+                const msg = nonSystemMessages[i];
+                
+                if (msg.role === 'user') {
+                    // For the first user message, prepend system instructions
+                    const content = (i === 0 && systemPrompt) 
+                        ? systemPrompt + msg.content 
+                        : msg.content;
+                    vscodeMessages.push(vscode.LanguageModelChatMessage.User(content));
                 } else {
-                    return vscode.LanguageModelChatMessage.Assistant(msg.content);
+                    vscodeMessages.push(vscode.LanguageModelChatMessage.Assistant(msg.content));
                 }
-            });
+            }
 
             // Send the request
             const chatResponse = await selectedModel.sendRequest(
