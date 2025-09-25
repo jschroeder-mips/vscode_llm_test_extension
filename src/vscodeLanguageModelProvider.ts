@@ -9,9 +9,7 @@ export class VSCodeLanguageModelProvider extends LanguageModelProvider {
         { name: 'GPT-4o', id: 'gpt-4o', family: 'gpt-4o', vendor: 'copilot' },
         { name: 'GPT-4o-mini', id: 'gpt-4o-mini', family: 'gpt-4o-mini', vendor: 'copilot' },
         { name: 'GPT-5-mini', id: 'gpt-5-mini', family: 'gpt-5-mini', vendor: 'copilot' },
-        { name: 'o1', id: 'o1', family: 'o1', vendor: 'copilot' },
-        { name: 'o1-mini', id: 'o1-mini', family: 'o1-mini', vendor: 'copilot' },
-        { name: 'Claude 3.5 Sonnet', id: 'claude-3.5-sonnet', family: 'claude-3.5-sonnet', vendor: 'copilot' }
+        { name: 'Claude 4 Sonnet', id: 'claude-sonnet-4', family: 'claude-sonnet-4', vendor: 'copilot' },
     ];
 
     async getAvailableModels(): Promise<LanguageModel[]> {
